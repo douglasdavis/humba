@@ -44,7 +44,7 @@ def histogram(
     range: Tuple[float,float] = (0, 10),
     weights: Optional[np.ndarray] = None,
     uoflow: bool = False,
-) -> (np.ndarray, Optional[np.ndarray]):
+) -> Tuple[np.ndarray, Optional[np.ndarray]]:
     """
     Calculate the histogram for the data ``x``
 

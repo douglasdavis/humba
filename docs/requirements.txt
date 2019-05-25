@@ -1,0 +1,4 @@
+numpy
+sphinxcontrib-programoutput
+sphinx-autodoc-typehints
+autodocsumm
