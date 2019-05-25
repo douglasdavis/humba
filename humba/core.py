@@ -46,20 +46,30 @@ def histogram(
     uoflow: bool = False,
 ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
     """
-    Calculate the histogram for the data ``x``
+    Calculate the histogram for the data ``x``.
 
     Parameters
     ----------
     x
         data to histogram
-    nbins
-        int
+    bins
+        number of bins
     range
         axis range
     weights
         array of weights for ``x``
     uoflow
         include over and underflow content in first and last bins
+
+    Examples
+    --------
+
+    >>> x = np.random.randn(100000)
+    >>> w = np.random.uniform(0.4, 0.5, x.shape[0])
+    >>> hist1, _ = humba.histogram(x, bins=50, range=(-5, 5))
+    >>> hist2, error = humba.histogram(x, bins=50, range=(-5, 5), weights=w)
+    >>> hist3, error = humba.histogram(x, bins=50, range=(-3, 3), weights=w, uoflow=True)
+
     """
     if weights is not None:
         res, err = jit_histogram_w(x, bins, range[0], range[1], weights)
@@ -68,10 +78,10 @@ def histogram(
             res[-2] += res[-1]
             err[1] = math.sqrt(err[1] ** 2 + err[0] ** 2)
             err[-2] = math.sqrt(err[-2] ** 2 + err[-1] ** 2)
-        return res[1:-1], err[1:-1]
+        return (res[1:-1], err[1:-1])
     else:
         res = jit_histogram(x, bins, range[0], range[1])
         if uoflow:
             res[1] += res[0]
             res[-2] += res[-1]
-        return res[1:-1]
+        return (res[1:-1], None)
