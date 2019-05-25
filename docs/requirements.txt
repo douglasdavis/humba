@@ -1,3 +1,4 @@
+sphinx>=2.0
 numpy
 sphinxcontrib-programoutput
 sphinx-autodoc-typehints
