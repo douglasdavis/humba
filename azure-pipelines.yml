@@ -4,7 +4,7 @@ trigger:
       - master
 
 pr:
-  -master
+  - master
 
 jobs:
 - job: 'Linux'
