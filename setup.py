@@ -14,7 +14,7 @@ with open(os.path.join(this_directory, "README.md"), "rb") as f:
 
 setup(
     name="humba",
-    version="0.0.1",
+    version="0.0.2",
     scripts=[],
     packages=find_packages(exclude=["tests"]),
     description="Histogramming using numba",
