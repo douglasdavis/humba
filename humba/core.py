@@ -83,8 +83,8 @@ def histogram_mw(
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Histogram the same data but with multiple weight variations.
 
-    Paramters
-    ---------
+    Parameters
+    ----------
     x : np.ndarray
         data to histogram
     weights : np.ndarray, optional
