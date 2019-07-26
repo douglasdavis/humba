@@ -80,7 +80,7 @@ def histogram_mw(
     bins: int = 10,
     range: Tuple[float, float] = (0, 10),
     flow: bool = False,
-):
+) -> Tuple[ndarray, ndarray, ndarray]:
     """Histogram the same data but with multiple weight variations.
 
     Paramters
