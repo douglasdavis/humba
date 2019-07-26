@@ -54,6 +54,7 @@ def histogram(
     """
     edges = np.linspace(range[0], range[1], bins + 1)
     if weights is not None:
+        assert x.shape == weights.shape, "x and weights must have identical shape"
         if x.dtype == np.float64:
             hfunc = hj._float64_weighted
         elif x.dtype == np.float32:
@@ -71,3 +72,55 @@ def histogram(
             raise TypeError("dtype of input must be float32 or float64")
         res = hfunc(x, bins, range[0], range[1], flow)
         return (res, None, edges)
+
+
+def histogram_mw(
+    x: np.ndarray,
+    weights: np.ndarray,
+    bins: int = 10,
+    range: Tuple[float, float] = (0, 10),
+    flow: bool = False,
+):
+    """Histogram the same data but with multiple weight variations.
+
+    Paramters
+    ---------
+    x : np.ndarray
+        data to histogram
+    weights : np.ndarray, optional
+        multidimensional array of weights for ``x`` the first element
+        of the ``shape`` attribute must be equal to the length of ``x``.
+    bins : np.ndarray
+        number of bins
+    range : (float, float)
+        axis range
+    flow : bool
+        include over and underflow content in first and last bins
+
+    Returns
+    -------
+    count : np.ndarray
+        The values of the histograms calculated from the weights
+        Shape will be (bins, ``weights.shape[0]``)
+    error : np.ndarray
+        The poission uncertainty on the bin heights (shape will be
+        the same as ``count``.
+    edges : np.ndarray
+        The bin edges
+
+    Notes
+    -----
+    If the dtype of the ``weights`` is not the same as ``x``, then it
+    is converted to the dtype of ``x``.
+
+    """
+    edges = np.linspace(range[0], range[1], bins + 1)
+    assert x.shape[0] == weights.shape[0], "weights shape is not compatible with x"
+    if x.dtype == np.float64:
+        hfunc = hj._float64_multiweights
+    elif x.dtype == np.float32:
+        hfunc = hj._float32_multiweights
+    else:
+        raise TypeError("dtype of input must be float32 or float64")
+    res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)
+    return (res, err, edges)
