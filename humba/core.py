@@ -1,87 +1,73 @@
-import numba
 import numpy as np
-import math
 from typing import Optional, Tuple
 
-
-@numba.jit(nopython=True)
-def jit_histogram_w(x, nbins, xmin, xmax, weights):
-    norm = 1.0 / (xmax - xmin)
-    count = np.zeros((nbins + 2))
-    sumw2 = np.zeros((nbins + 2))
-    for i in range(x.shape[0]):
-        if x[i] < xmin:
-            count[0] += weights[i]
-            sumw2[0] += weights[i] * weights[i]
-        elif x[i] > xmax:
-            count[nbins + 1] += weights[i]
-            sumw2[nbins + 1] += weights[i]
-        else:
-            binid = int((x[i] - xmin) * nbins * norm)
-            count[binid + 1] += weights[i]
-            sumw2[binid + 1] += weights[i]
-    return count, np.sqrt(sumw2)
-
-
-@numba.jit(nopython=True)
-def jit_histogram(x, nbins, xmin, xmax):
-    norm = 1.0 / (xmax - xmin)
-    count = np.zeros((nbins + 2))
-    for i in range(x.shape[0]):
-        if x[i] < xmin:
-            count[0] += 1
-        elif x[i] > xmax:
-            count[nbins + 1] += 1
-        else:
-            binid = int((x[i] - xmin) * nbins * norm)
-            count[binid + 1] += 1
-    return count
+import humba.jits as hj
 
 
 def histogram(
     x: np.ndarray,
     bins: int = 10,
-    range: Tuple[float,float] = (0, 10),
+    range: Tuple[float, float] = (0, 10),
     weights: Optional[np.ndarray] = None,
-    uoflow: bool = False,
-) -> Tuple[np.ndarray, Optional[np.ndarray]]:
-    """
-    Calculate the histogram for the data ``x``.
+    flow: bool = False,
+) -> Tuple[np.ndarray, Optional[np.ndarray], np.ndarray]:
+    """Calculate the histogram for the data ``x``.
 
     Parameters
     ----------
-    x
+    x : np.ndarray
         data to histogram
-    bins
+    bins : np.ndarray
         number of bins
-    range
+    range : (float, float)
         axis range
-    weights
+    weights : np.ndarray, optional
         array of weights for ``x``
-    uoflow
+    flow : bool
         include over and underflow content in first and last bins
+
+    Returns
+    -------
+    count : np.ndarray
+        The values of the histogram
+    error : np.ndarray, optional
+        The poission uncertainty on the bin heights
+    edges : np.ndarray
+        The bin edges
+
+    Notes
+    -----
+    If the dtype of the ``weights`` is not the same as ``x``, then it
+    is converted to the dtype of ``x``.
 
     Examples
     --------
-
+    >>> import numpy as np
+    >>> from humba import histogram
     >>> x = np.random.randn(100000)
     >>> w = np.random.uniform(0.4, 0.5, x.shape[0])
-    >>> hist1, _ = humba.histogram(x, bins=50, range=(-5, 5))
-    >>> hist2, error = humba.histogram(x, bins=50, range=(-5, 5), weights=w)
-    >>> hist3, error = humba.histogram(x, bins=50, range=(-3, 3), weights=w, uoflow=True)
+    >>> hist1, _, edges = humba.histogram(x, bins=50, range=(-5, 5))
+    >>> hist2, _, edges = humba.histogram(x, bins=50, range=(-5, 5), flow=True)
+    >>> hist3, error, edges = histogram(x, bins=50, range=(-5, 5), weights=w)
+    >>> hist4, error, edges = histogram(x, bins=50, range=(-3, 3), weights=w, flow=True)
 
     """
+    edges = np.linspace(range[0], range[1], bins + 1)
     if weights is not None:
-        res, err = jit_histogram_w(x, bins, range[0], range[1], weights)
-        if uoflow:
-            res[1] += res[0]
-            res[-2] += res[-1]
-            err[1] = math.sqrt(err[1] ** 2 + err[0] ** 2)
-            err[-2] = math.sqrt(err[-2] ** 2 + err[-1] ** 2)
-        return (res[1:-1], err[1:-1])
+        if x.dtype == np.float64:
+            hfunc = hj._float64_weighted
+        elif x.dtype == np.float32:
+            hfunc = hj._float32_weighted
+        else:
+            raise TypeError("dtype of input must be float32 or float64")
+        res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)
+        return (res, err, edges)
     else:
-        res = jit_histogram(x, bins, range[0], range[1])
-        if uoflow:
-            res[1] += res[0]
-            res[-2] += res[-1]
-        return (res[1:-1], None)
+        if x.dtype == np.float64:
+            hfunc = hj._float64
+        elif x.dtype == np.float32:
+            hfunc = hj._float32
+        else:
+            raise TypeError("dtype of input must be float32 or float64")
+        res = hfunc(x, bins, range[0], range[1], flow)
+        return (res, None, edges)

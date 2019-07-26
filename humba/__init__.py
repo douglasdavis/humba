@@ -1,5 +1,5 @@
 from .core import histogram
 
-__version__ = "0.0.2"
+__version__ = "0.1a1"
 
 __all__ = ["histogram"]
