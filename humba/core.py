@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Optional, Tuple
 
-import humba.jits as hj
+import humba.jits as jits
 
 
 def histogram(
@@ -56,25 +56,25 @@ def histogram(
     if weights is not None:
         assert x.shape == weights.shape, "x and weights must have identical shape"
         if x.dtype == np.float64:
-            hfunc = hj._float64_weighted
+            hfunc = jits._float64_weighted
         elif x.dtype == np.float32:
-            hfunc = hj._float32_weighted
+            hfunc = jits._float32_weighted
         else:
             raise TypeError("dtype of input must be float32 or float64")
         res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)
         return (res, err, edges)
     else:
         if x.dtype == np.float64:
-            hfunc = hj._float64
+            hfunc = jits._float64
         elif x.dtype == np.float32:
-            hfunc = hj._float32
+            hfunc = jits._float32
         else:
             raise TypeError("dtype of input must be float32 or float64")
         res = hfunc(x, bins, range[0], range[1], flow)
         return (res, None, edges)
 
 
-def histogram_mw(
+def mwv_histogram(
     x: np.ndarray,
     weights: np.ndarray,
     bins: int = 10,
@@ -117,9 +117,9 @@ def histogram_mw(
     edges = np.linspace(range[0], range[1], bins + 1)
     assert x.shape[0] == weights.shape[0], "weights shape is not compatible with x"
     if x.dtype == np.float64:
-        hfunc = hj._float64_multiweights
+        hfunc = jits._float64_multiweights
     elif x.dtype == np.float32:
-        hfunc = hj._float32_multiweights
+        hfunc = jits._float32_multiweights
     else:
         raise TypeError("dtype of input must be float32 or float64")
     res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)

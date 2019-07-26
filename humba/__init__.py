@@ -1,6 +1,5 @@
-from .core import histogram
-from .core import histogram_mw
+from .core import histogram, mwv_histogram
 
-__version__ = "0.1a2"
+__version__ = "0.1a3"
 
-__all__ = ["histogram", "histogram_mw"]
+__all__ = ["histogram", "mwv_histogram"]

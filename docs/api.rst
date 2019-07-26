@@ -1,10 +1,19 @@
-API
-===
+API Reference
+=============
 
 .. currentmodule:: humba
 
-.. automodule:: humba
+Summary
+-------
 
-.. autofunction:: humba.histogram
+.. autosummary::
 
-.. autofunction:: humba.histogram_mw
+   histogram
+   mwv_histogram
+
+Functions
+---------
+
+.. autofunction:: histogram
+
+.. autofunction:: mwv_histogram

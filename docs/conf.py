@@ -54,12 +54,14 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 html_theme = "alabaster"
 
 html_theme_options = {
+    "description": "Numba accelerated histogramming",
     "github_user": "douglasdavis",
     "github_repo": "humba",
     "github_type": "star",
     "github_count": False,
     "page_width": "1000px",
     "sidebar_width": "240px",
+    "fixed_sidebar": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

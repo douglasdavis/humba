@@ -39,7 +39,7 @@ def test32_weighted():
 def test64_manyweights():
     x = np.random.randn(10000)
     w = (0.1 + np.random.rand(10000, 20)) / 2.0
-    hh, _, edges = humba.histogram_mw(x, w, bins=20, range=(-3, 3))
+    hh, _, edges = humba.mwv_histogram(x, w, bins=20, range=(-3, 3))
     for i in range(hh.shape[1]):
         ihn, inedges = np.histogram(x, bins=20, range=(-3, 3), weights=w.T[i])
         assert np.allclose(hh.T[i], ihn)
@@ -48,7 +48,7 @@ def test64_manyweights():
 def test32_manyweights():
     x = np.random.randn(10000).astype(np.float32)
     w = (0.1 + np.random.rand(10000, 20)) / 2.0
-    hh, _, edges = humba.histogram_mw(x, w, bins=20, range=(-3, 3))
+    hh, _, edges = humba.mwv_histogram(x, w, bins=20, range=(-3, 3))
     for i in range(hh.shape[1]):
         ihn, inedges = np.histogram(x, bins=20, range=(-3, 3), weights=w.T[i])
         assert np.allclose(hh.T[i], ihn)
