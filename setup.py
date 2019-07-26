@@ -12,9 +12,16 @@ with open(os.path.join(this_directory, "README.md"), "rb") as f:
     long_description = f.read().decode("utf-8")
 
 
+def get_version():
+    with open(os.path.join("humba", "__init__.py"), "r") as f:
+        for line in f.readlines():
+            if "__version__ = " in line:
+                return line.strip().split(" = ")[-1][1:-1]
+
+
 setup(
     name="humba",
-    version = "0.1a2",
+    version = get_version(),
     scripts=[],
     packages=find_packages(exclude=["tests"]),
     description="Histogramming using numba",
