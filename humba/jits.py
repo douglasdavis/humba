@@ -1,3 +1,7 @@
+"""
+module housing just-in-time compiled functions
+"""
+
 import numba as nb
 import numpy as np
 
@@ -8,7 +12,10 @@ import numpy as np
     ),
     nopython=True,
 )
-def _float32_weighted(x, weights, nbins, xmin, xmax, flow):
+def _hfloat32_weighted(
+    x: np.ndarray, weights: np.ndarray, nbins: int, xmin: float, xmax: float, flow: bool
+):
+    """ detail jit compiled function for 32 bit floating point weighted histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2), dtype=np.float32)
     sumw2 = np.zeros((nbins + 2), dtype=np.float32)
@@ -36,7 +43,8 @@ def _float32_weighted(x, weights, nbins, xmin, xmax, flow):
     nb.float32[:](nb.float32[:], nb.int64, nb.float64, nb.float64, nb.boolean),
     nopython=True,
 )
-def _float32(x, nbins, xmin, xmax, flow):
+def _hfloat32(x: np.ndarray, nbins: int, xmin: float, xmax: float, flow: bool):
+    """ detail jit compiled function for 32 bit floating point histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2), dtype=np.float32)
     for i in range(x.shape[0]):
@@ -60,7 +68,8 @@ def _float32(x, nbins, xmin, xmax, flow):
     ),
     nopython=True,
 )
-def _float64_weighted(x, weights, nbins, xmin, xmax, flow):
+def _hfloat64_weighted(x, weights, nbins, xmin, xmax, flow):
+    """ detail funtion for 64 bit floating point weighted histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2), dtype=np.float64)
     sumw2 = np.zeros((nbins + 2), dtype=np.float64)
@@ -88,7 +97,8 @@ def _float64_weighted(x, weights, nbins, xmin, xmax, flow):
     nb.float64[:](nb.float64[:], nb.int64, nb.float64, nb.float64, nb.boolean),
     nopython=True,
 )
-def _float64(x, nbins, xmin, xmax, flow):
+def _hfloat64(x: np.ndarray, nbins: int, xmin: float, xmax: float, flow: bool):
+    """ detail jit compiled function for 64 bit floating point histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2), dtype=np.float64)
     for i in range(x.shape[0]):
@@ -113,7 +123,10 @@ def _float64(x, nbins, xmin, xmax, flow):
     nopython=True,
     parallel=True,
 )
-def _float32_multiweights(x, weights, nbins, xmin, xmax, flow):
+def _hfloat32_multiweights(
+    x: np.ndarray, weights: np.ndarray, nbins: int, xmin: float, xmax: float, flow: bool
+):
+    """ detail jit compiled function for 32 bit multiweighted histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2, weights.shape[1]), dtype=np.float32)
     sumw2 = np.zeros((nbins + 2, weights.shape[1]), dtype=np.float32)
@@ -147,7 +160,10 @@ def _float32_multiweights(x, weights, nbins, xmin, xmax, flow):
     nopython=True,
     parallel=True,
 )
-def _float64_multiweights(x, weights, nbins, xmin, xmax, flow):
+def _hfloat64_multiweights(
+    x: np.ndarray, weights: np.ndarray, nbins: int, xmin: float, xmax: float, flow: bool
+):
+    """ detail jit compiled function for 64 bit multiweighted histograms """
     norm = 1.0 / (xmax - xmin)
     count = np.zeros((nbins + 2, weights.shape[1]), dtype=np.float64)
     sumw2 = np.zeros((nbins + 2, weights.shape[1]), dtype=np.float64)

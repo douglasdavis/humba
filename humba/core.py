@@ -1,3 +1,7 @@
+"""
+module housing core library functionality
+"""
+
 import numpy as np
 from typing import Optional, Tuple
 
@@ -56,18 +60,18 @@ def histogram(
     if weights is not None:
         assert x.shape == weights.shape, "x and weights must have identical shape"
         if x.dtype == np.float64:
-            hfunc = jits._float64_weighted
+            hfunc = jits._hfloat64_weighted
         elif x.dtype == np.float32:
-            hfunc = jits._float32_weighted
+            hfunc = jits._hfloat32_weighted
         else:
             raise TypeError("dtype of input must be float32 or float64")
         res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)
         return (res, err, edges)
     else:
         if x.dtype == np.float64:
-            hfunc = jits._float64
+            hfunc = jits._hfloat64
         elif x.dtype == np.float32:
-            hfunc = jits._float32
+            hfunc = jits._hfloat32
         else:
             raise TypeError("dtype of input must be float32 or float64")
         res = hfunc(x, bins, range[0], range[1], flow)
@@ -110,17 +114,19 @@ def mwv_histogram(
 
     Notes
     -----
-    If the dtype of the ``weights`` is not the same as ``x``, then it
-    is converted to the dtype of ``x``.
+    If ``x`` is not the same dtype as ``weights``, then it is converted
+    to the dtype of ``weights`` (for multi weight histograms we expect
+    the weights array to be larger than the data array so we prefer to
+    cast the smaller chunk of data).
 
     """
     edges = np.linspace(range[0], range[1], bins + 1)
     assert x.shape[0] == weights.shape[0], "weights shape is not compatible with x"
-    if x.dtype == np.float64:
-        hfunc = jits._float64_multiweights
-    elif x.dtype == np.float32:
-        hfunc = jits._float32_multiweights
+    if weights.dtype == np.float64:
+        hfunc = jits._hfloat64_multiweights
+    elif weights.dtype == np.float32:
+        hfunc = jits._hfloat32_multiweights
     else:
         raise TypeError("dtype of input must be float32 or float64")
-    res, err = hfunc(x, weights.astype(x.dtype), bins, range[0], range[1], flow)
+    res, err = hfunc(x.astype(weights.dtype), weights, bins, range[0], range[1], flow)
     return (res, err, edges)
