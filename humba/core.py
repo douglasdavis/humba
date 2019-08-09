@@ -19,24 +19,24 @@ def histogram(
 
     Parameters
     ----------
-    x : np.ndarray
+    x : :obj:`numpy.ndarray`
         data to histogram
-    bins : np.ndarray
+    bins : int
         number of bins
     range : (float, float)
         axis range
-    weights : np.ndarray, optional
+    weights : :obj:`numpy.ndarray`, optional
         array of weights for ``x``
     flow : bool
         include over and underflow content in first and last bins
 
     Returns
     -------
-    count : np.ndarray
+    count : :obj:`numpy.ndarray`
         The values of the histogram
-    error : np.ndarray, optional
+    error : :obj:`numpy.ndarray`, optional
         The poission uncertainty on the bin heights
-    edges : np.ndarray
+    edges : :obj:`numpy.ndarray`
         The bin edges
 
     Notes
@@ -89,12 +89,12 @@ def mwv_histogram(
 
     Parameters
     ----------
-    x : np.ndarray
+    x : :obj:`numpy.ndarray`
         data to histogram
-    weights : np.ndarray, optional
+    weights : :obj:`numpy.ndarray`, optional
         multidimensional array of weights for ``x`` the first element
         of the ``shape`` attribute must be equal to the length of ``x``.
-    bins : np.ndarray
+    bins : int
         number of bins
     range : (float, float)
         axis range
@@ -103,13 +103,13 @@ def mwv_histogram(
 
     Returns
     -------
-    count : np.ndarray
+    count : :obj:`numpy.ndarray`
         The values of the histograms calculated from the weights
         Shape will be (bins, ``weights.shape[0]``)
-    error : np.ndarray
+    error : :obj:`numpy.ndarray`
         The poission uncertainty on the bin heights (shape will be
         the same as ``count``.
-    edges : np.ndarray
+    edges : :obj:`numpy.ndarray`
         The bin edges
 
     Notes

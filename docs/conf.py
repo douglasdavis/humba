@@ -45,6 +45,8 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# syntax highlighting style
+pygments_style = "sphinx"
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -59,9 +61,13 @@ html_theme_options = {
     "github_repo": "humba",
     "github_type": "star",
     "github_count": False,
-    "page_width": "1000px",
+    "font_family": '"Avenir Next", Calibri, "PT Sans", sans-serif',
+    "head_font_family": '"Avenir Next", Calibri, "PT Sans", sans-serif',
+    "font_size": "18px",
+    "page_width": "980px",
     "sidebar_width": "240px",
     "fixed_sidebar": True,
+    "show_relbars": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
