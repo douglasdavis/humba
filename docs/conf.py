@@ -14,6 +14,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import humba
 
 # -- Project information -----------------------------------------------------
 
@@ -21,6 +22,8 @@ project = "humba"
 copyright = "2019, Doug Davis"
 author = "Doug Davis"
 
+version = humba.__version__
+release = humba.__version__
 
 # -- General configuration ---------------------------------------------------
 
