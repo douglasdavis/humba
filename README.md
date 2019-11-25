@@ -1,6 +1,6 @@
 # humba
 
-[![Build Status](https://dev.azure.com/ddavis0485/humba/_apis/build/status/douglasdavis.humba?branchName=master)](https://dev.azure.com/ddavis0485/humba/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fdouglasdavis%2Fhumba%2Fbadge&style=flat)](https://actions-badge.atrox.dev/douglasdavis/humba/goto)
 [![Documentation Status](https://readthedocs.org/projects/humba/badge/?version=latest)](https://humba.readthedocs.io/)
 [![PyPI](https://img.shields.io/pypi/v/humba)](https://pypi.org/project/humba/)
 [![PyVersions](https://img.shields.io/pypi/pyversions/humba)](https://pypi.org/project/humba/)

@@ -1,0 +1,27 @@
+name: Linux/macOS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macOS-latest]
+        python-version: [3.6, 3.7]
+    runs-on: ${{matrix.platform}}
+    steps:
+    - uses: actions/checkout@master
+    - name: setup Python ${{matrix.python-version}}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{matrix.python-version}}
+    - name: install deps
+      run: |
+        python -m pip install pip setuptools pytest -U
+        pip install --ignore-installed -U -q --no-cache-dir -e .
+        pip list
+    - name: run pytest
+      run: |
+        python -m pytest
